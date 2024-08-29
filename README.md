@@ -101,11 +101,11 @@ The following animations demonstrate how our model predicts normal and drift dat
 
 ## Normal
 
-![Normal](./pic/Normal.mp4)
+![Normal](./pic/Normal.gif)
 
 ## Drift
 
-![Drift](./pic/Drift.mp4)
+![Drift](./pic/Drift.gif)
 
 # Citation
 
