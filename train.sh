@@ -1,6 +1,6 @@
 
 # Default arguments
-DATASET="IPC_SHM_balance"
+DATASET="IPC_SHM"
 FEATURE="hist"
 BATCH=200
 D_FF=128
@@ -12,7 +12,7 @@ RANDOM_SEED=0
 DATA_AUG=true
 SOFTMAX=false
 
-if [[ $DATASET == "IPC_SHM_balance" ]]; then
+if [[ $DATASET == "IPC_SHM" ]]; then
   N_CLASS=7
   SEQ_LEN=72000
   WIN_LEN=2000
