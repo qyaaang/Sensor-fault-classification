@@ -91,7 +91,7 @@ python main.py \
 
 Our model outperforms baselines by a great margin in the overall accuracy, with each sensor fault type achieving high accuracy.![Comparisons with baselines in the IPC-SHM dataset](./pic/Results_1.png)
 
-Our model also achieves superior performance in four synthetic datasets, demontarting the generalization of our model.
+Our model also achieves superior performance in four synthetic datasets, demonstrating the generalization of our model.
 
 <img src="./pic/Results_2.png" width="75%">
 
