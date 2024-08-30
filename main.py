@@ -21,7 +21,7 @@ from models.classifier import Classifier
 # from torchviz import make_dot
 import numpy as np
 import matplotlib.pyplot as plt
-# import seaborn as sns
+import seaborn as sns
 import argparse
 import os
 import random
@@ -36,25 +36,7 @@ class Expr:
         self.train_config = train_config
         self.test_config = test_config
 
-        # if train_config['dataset'] == 'IPC_SHM_all':
-        #     dataset = torch.load('./data/IPC_SHM/IPC_SHM.pt')
-        # else:
-        #     dataset = torch.load('./data/IPC_SHM/IPC_SHM_balance.pt')
-
-        if train_config['dataset'] == 'IPC_SHM_all':
-            dataset = torch.load('./data/IPC_SHM/IPC_SHM.pt')
-        elif train_config['dataset'] == 'IPC_SHM_balance':
-            dataset = torch.load('./data/IPC_SHM/IPC_SHM_balance.pt')
-        elif train_config['dataset'] == 'HIT-dataset':
-            dataset = torch.load('./data/HIT-dataset/HIT-dataset.pt')
-        elif train_config['dataset'] == 'Canton_Tower':
-            dataset = torch.load('./data/Canton_Tower/Canton_Tower.pt')
-        elif train_config['dataset'] == 'UCSD_Acc':
-            dataset = torch.load('./data/UCSD_Acc/UCSD_Acc.pt')
-        elif train_config['dataset'] == 'UCSD_Disp':
-            dataset = torch.load('./data/UCSD_Disp/UCSD_Disp.pt')
-        elif train_config['dataset'] == 'UCSD':
-            dataset = torch.load('./data/UCSD/UCSD.pt')
+        dataset = torch.load('./data/{}.pt'.format(train_config['dataset']))
 
         X = dataset['samples']
         y = dataset['labels']
@@ -66,10 +48,6 @@ class Expr:
         X_train, X_val, X_test, y_train, y_val, y_test = self.split_dataset(X, y)
 
         self.X_train, self.X_val, self.X_test, self.y_train, self.y_val, self.y_test = self.split_dataset(X, y)
-
-        np.save('./animation/X_test.npy', X_test)
-
-        # print(X_test.shape)
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -230,12 +208,12 @@ class Expr:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-dataset', help='IPC_SHM_all, IPC_SHM_balance', type=str, default='IPC_SHM_all')
-    parser.add_argument('-feature', help='time, hist, fft', type=str, default='time') 
-    parser.add_argument('-batch', help='batch size', type=int, default=128)
+    parser.add_argument('-dataset', help='dataset', type=str, default='IPC_SHM')
+    parser.add_argument('-feature', help='time, hist, fft', type=str, default='hist') 
+    parser.add_argument('-batch', help='batch size', type=int, default=200)
     parser.add_argument('-seq_len', help='sequence length', type=int, default=72000)
     parser.add_argument('-win_len', help='window length', type=int, default=2000)
-    parser.add_argument('-hist_bin', help='', type=int, default=1024)
+    parser.add_argument('-hist_bin', help='', type=int, default=64)
     parser.add_argument('-d_ff', help='feed forward dimension', type=int, default=128)
     parser.add_argument('-n_class', help='number of fault types', type=int, default=7)
     parser.add_argument('-dropout', help='', type=float, default=0)
