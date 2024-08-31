@@ -67,19 +67,13 @@ def test(model, config, test_dataloader):
         all_z = torch.cat(all_z, dim=0)
 
         predicted_classes = torch.argmax(all_test_outputs, axis=1).cpu().numpy()
-        # Compute confusion matrix
         cm = confusion_matrix(all_test_labels.argmax(axis=1), predicted_classes) 
-        # Convert confusion matrix to percentages
         cm_percentage = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis] * 100
-        
-        if config['dataset'] == 'IPC_SHM_all' or config['dataset'] == 'IPC_SHM_balance':
-            # Display confusion matrix using seaborn with percentages, swapped axes, and custom labels
-            plt.figure(figsize=(7, 7))
-            sns.set(font_scale=1.2)  # Adjust font scale
+        plt.figure(figsize=(7, 7))
+        sns.set(font_scale=1.2)
+        if config['dataset'] == 'IPC_SHM':
             custom_labels = ["normal", "missing", "minor", "outlier", "square", "trend", "drift"]
         else:
-            plt.figure(figsize=(7, 7))
-            sns.set(font_scale=1.2)  # Adjust font scale
             custom_labels = ['normal', 'random', 'malfunction', 'drift', 'bias']
         sns.heatmap(cm_percentage.T, annot=True, fmt='.1f', cmap='Blues', linewidths=.5, square=True,
                     xticklabels=custom_labels,
@@ -166,29 +160,19 @@ def test_sub_seq(model, config, X_test, y_test):
 
             predicted_classes = torch.argmax(all_test_outputs, axis=1).unsqueeze(1)
 
-
         results.append(predicted_classes)
 
     results = torch.cat(results, dim=1).cpu().numpy()
-
     y = torch.argmax(y_test, 1).cpu().numpy()
 
     # print(results)
-
-    print(y)
+    # print(y)
 
     predicted_classes_steps = stats.mode(results[:, :3], axis=1)
-
-    print(predicted_classes_steps.mode)
-
+    # print(predicted_classes_steps.mode)
     same_elements = y == predicted_classes_steps.mode
-
-    # 计算相同元素的个数
-    same_elements_count = np.sum(same_elements)
-
-    print(same_elements_count / results.shape[0])
-
-    
+    # same_elements_count = np.sum(same_elements)
+    # print(same_elements_count / results.shape[0])
     print('Test Accuracy: {:.2f}%'.format(100 * correct_test_predictions / total_test_samples))
 
     return results
