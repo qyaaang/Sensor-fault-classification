@@ -18,10 +18,8 @@ from dataset.sensor_dataset import SensorDataset
 from sklearn.model_selection import train_test_split
 from utils.data_aug import DataAug
 from models.classifier import Classifier
-# from torchviz import make_dot
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 import argparse
 import os
 import random
@@ -72,43 +70,6 @@ class Expr:
         
         self.model = Classifier(train_config).to(self.device)
         self.init_model()
-        # self.viz_model()
-
-        # x_train, y_train = next(iter(self.train_dataloader))
-
-        # print(x_train.shape)
-        # print(x_train)
-
-
-        # y = self.model(x_train)
-
-        # print(y)
-
-        # x_train, y_train = next(iter(self.train_dataloader))
-
-        # x_test, y_test = next(iter(self.test_dataloader))
-
-        # print(y_test)
-
-        # self.show_labels(y_train, y_val, y_test)
-
-    def split_data(self, data, label, train_ratio=0.7, val_ratio=0.15, test_ratio=0.15):
-        # Data Shuffling
-        np.random.seed(42)
-        num_sample = data.shape[0]  # number of samples
-        indices = np.arange(num_sample)  # create an array of indices
-        np.random.shuffle(indices)  # shuffle the indices
-
-        data = data[indices, :]  # shuffle the data
-        label = label[indices, :]  # shuffle the labels
-
-        mark_train = int(train_ratio * num_sample)
-        mark_val = int((train_ratio + val_ratio) * num_sample)
-        mark_test = int((train_ratio + val_ratio + test_ratio) * num_sample)
-        X_train, X_val, X_test = np.split(data, [mark_train, mark_val])  # split the data
-        y_train, y_val, y_test = np.split(label, [mark_train, mark_val])  # split the labels
-
-        return X_train, X_val, X_test, y_train, y_val, y_test
 
     def split_dataset(self, X, y):
         
@@ -117,44 +78,6 @@ class Expr:
         X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
 
         return X_train, X_val, X_test, y_train, y_val, y_test
-
-    def show_labels(self, y_train, y_val, y_test):
-        if self.train_config['dataset'] == 'IPC_SHM_all':
-            y_train = y_train.to(torch.float32).numpy()
-            y_val = y_val.to(torch.float32).numpy()
-            y_test = y_test.to(torch.float32).numpy()
-
-        train_labels = np.argmax(y_train, axis=1)
-        val_labels = np.argmax(y_val, axis=1)
-        test_labels = np.argmax(y_test, axis=1)
-
-        print(train_labels.shape)
-
-        plt.figure(figsize=(15, 5))
-
-        plt.subplot(1, 3, 1)
-        sns.histplot(train_labels, kde=False, bins=7)
-        plt.title('Training Set Label Distribution')
-
-        plt.subplot(1, 3, 2)
-        sns.histplot(val_labels, kde=False, bins=7)
-        plt.title('Validation Set Label Distribution')
-
-        plt.subplot(1, 3, 3)
-        sns.histplot(test_labels, kde=False, bins=7)
-        plt.title('Test Set Label Distribution')
-
-        plt.savefig('./Label distribution_{}.jpeg'.format(self.train_config['dataset']))
-
-    def viz_model(self):
-        # 创建一个示例输入
-        x = torch.randn(1, 36, 1024)
-
-        # 生成模型结构图
-        y = self.model(x)
-        dot = make_dot(y, params=dict(self.model.named_parameters()))
-        dot.format = 'png'
-        dot.render('model_structure')
 
     def init_model(self):
         for param in self.model.parameters():
