@@ -97,11 +97,23 @@ Our model also achieves superior performance in four synthetic datasets, demonst
 
 # Animations
 
-The following animations demonstrate how our model predicts normal and drift data in the IPC-SHM dataset. A sample in the IPC-SHM dataset is recorded over one hour at a sampling rate of 20 Hz.  In the following animations, our model outputs a label every 100 s by setting the window size to 2000.
+The following animations demonstrate how our model predicts sensor faults in the IPC-SHM dataset. A sample in the IPC-SHM dataset is recorded over one hour at a sampling rate of 20 Hz.  In the following animations, our model outputs a label every 100 s by setting the window size to 2000.
 
 ## Normal
 
 ![Normal](./pic/Normal.gif)
+
+## Minor
+
+![Minor](./pic/Minor.gif)
+
+## Outlier
+
+![Outlier](./pic/Outlier.gif)
+
+## Square
+
+![Square](./pic/Square.gif)
 
 ## Drift
 
