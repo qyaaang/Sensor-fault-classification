@@ -22,12 +22,8 @@ import time
 def train(model, config, train_dataloader, val_dataloader):
     loss_values = []
     epochs = 500
-    early_stopping_patience = 4000
     best_val_loss = float('inf')
-    best_model_state_dict = None
-    patience_counter = 0
     val_accuracies = []
-    test_accuracies = []
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     scheduler = MultiStepLR(optimizer, milestones=[50], gamma=0.1)
@@ -74,8 +70,8 @@ def train(model, config, train_dataloader, val_dataloader):
         loss_values.append(average_loss)
         accuracy = correct_predictions / total_samples
 
-        metrics = {"train/train_loss": average_loss, 
-                   "train/train_accuracy": accuracy}
+        # metrics = {"train/train_loss": average_loss, 
+        #            "train/train_accuracy": accuracy}
             
         # wandb.log(metrics)
 
@@ -103,7 +99,6 @@ def train(model, config, train_dataloader, val_dataloader):
 
             if average_val_loss < best_val_loss:
                 best_val_loss = average_val_loss
-                patience_counter = 0
                 torch.save(model.state_dict(), './checkpoints/{}_{}_BATCH_{}_WIN_{}_HIST_{}_HEAD_{}_AUG_{}.pt'.format(config['dataset'], 
                                                                                                                       config['feature'],
                                                                                                                       config['batch'],
@@ -111,9 +106,6 @@ def train(model, config, train_dataloader, val_dataloader):
                                                                                                                       config['hist_bin'], 
                                                                                                                       config['head'],
                                                                                                                       config['data_aug']))
-            else:
-                patience_counter += 1
-
         t_1 = time.time()
 
         print('Epoch: {:4d}/{:4d}, Train Loss: {:.5f}, Train Accuracy: {:.2f}%, Val Accuracy: {:.2f}%, Time Cost: {:.2f}s'.
