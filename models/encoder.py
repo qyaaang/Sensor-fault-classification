@@ -19,15 +19,15 @@ import torch.nn.functional as F
 class Window_wiseFeedForward(nn.Module):
     def __init__(self, d_model, d_ff, dropout):
         super(Window_wiseFeedForward, self).__init__()
-        self.w1 = nn.Linear(d_model, d_ff)
-        self.w2 = nn.Linear(d_ff, d_model)
+        self.layer1 = nn.Linear(d_model, d_ff)
+        self.layer2 = nn.Linear(d_ff, d_model)
         self.dropout = nn.Dropout(p=dropout)
     
     def forward(self, x):
-        X = self.w1(x)
+        X = self.layer1(x)
         X = F.tanh(X)
         X = self.dropout(X)
-        X = F.tanh(self.w2(X))
+        X = F.tanh(self.layer2(X))
         return X
     
 class SubLayerConnection(nn.Module):
